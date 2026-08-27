@@ -32,6 +32,12 @@ namespace BatteryGame
                 return;
             }
 
+            if (device.IsSubmitted)
+            {
+                HUD.Toast("이미 제출된 기기입니다.", ToastKind.Warning);
+                return;
+            }
+
             if (!device.IsPowered)
             {
                 HUD.Toast(device.DeviceName + "이(가) 작동하지 않습니다. 필요: " + device.Requirement +
@@ -44,6 +50,20 @@ namespace BatteryGame
             device.MarkSubmitted();
             GameManager.Instance.NotifyDeviceSubmitted(device);
             HUD.Toast(device.DeviceName + " 제출 완료!", ToastKind.Success);
+        }
+
+        /// <summary>세이브 복원용. 알림이나 집계 없이 제출된 모습만 재현한다.</summary>
+        public void RestoreSubmitted(Device device)
+        {
+            if (device == null || device.IsSubmitted) return;
+            PlaceOnCounter(device);
+            device.MarkSubmitted();
+        }
+
+        /// <summary>새 게임을 시작할 때 자리 배정을 처음부터 다시 하도록 되돌린다.</summary>
+        public void ResetPlacements()
+        {
+            nextAnchor = 0;
         }
 
         void PlaceOnCounter(Device device)

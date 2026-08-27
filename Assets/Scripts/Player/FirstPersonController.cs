@@ -28,16 +28,18 @@ namespace BatteryGame
 
         public bool LookEnabled { get; set; }
 
+        /// <summary>메뉴가 떠 있는 동안에는 꺼진다. GameFlow가 제어한다.</summary>
+        public bool ControlEnabled { get; private set; }
+
+        /// <summary>세이브에 기록할 카메라 상하 각도.</summary>
+        public float Pitch { get { return pitch; } }
+
         void Awake()
         {
             cc = GetComponent<CharacterController>();
             if (cameraPivot == null && Camera.main != null) cameraPivot = Camera.main.transform;
             LookEnabled = true;
-        }
-
-        void Start()
-        {
-            LockCursor(true);
+            ControlEnabled = false;
         }
 
         void OnDisable()
@@ -45,8 +47,34 @@ namespace BatteryGame
             LockCursor(false);
         }
 
+        public void SetControlEnabled(bool on)
+        {
+            ControlEnabled = on;
+            LockCursor(on);
+            if (!on)
+            {
+                planarVelocity = Vector3.zero;
+                verticalVelocity = 0f;
+            }
+        }
+
+        /// <summary>이어하기로 위치를 복원할 때 사용.</summary>
+        public void Teleport(Vector3 position, float yaw, float cameraPitchDegrees)
+        {
+            bool wasEnabled = cc.enabled;
+            cc.enabled = false;
+            transform.position = position;
+            transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+            pitch = Mathf.Clamp(cameraPitchDegrees, minPitch, maxPitch);
+            if (cameraPivot != null) cameraPivot.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+            cc.enabled = wasEnabled;
+            planarVelocity = Vector3.zero;
+            verticalVelocity = 0f;
+        }
+
         void Update()
         {
+            if (!ControlEnabled) return;
             HandleCursorToggle();
             if (LookEnabled && Cursor.lockState == CursorLockMode.Locked) HandleLook();
             HandleMove();

@@ -10,6 +10,13 @@ namespace BatteryGame
     {
         static HUD instance;
 
+        // 도메인 리로드가 꺼져 있으면 static이 이전 플레이의 값을 그대로 들고 있다.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatics()
+        {
+            instance = null;
+        }
+
         [SerializeField] PlayerInteractor player;
 
         [Header("조준 정보")]
@@ -32,11 +39,8 @@ namespace BatteryGame
         [SerializeField] CanvasGroup toastGroup;
         [SerializeField] float toastDuration = 2.4f;
 
-        [Header("클리어")]
-        [SerializeField] GameObject clearPanel;
-        [SerializeField] Text clearText;
-
         float toastTimer;
+        Canvas canvas;
 
         static readonly Color InfoColor = new Color(0.92f, 0.94f, 0.98f);
         static readonly Color SuccessColor = new Color(0.55f, 1f, 0.62f);
@@ -47,8 +51,8 @@ namespace BatteryGame
         {
             instance = this;
             if (player == null) player = FindFirstObjectByType<PlayerInteractor>();
+            canvas = GetComponent<Canvas>();
             if (toastGroup != null) toastGroup.alpha = 0f;
-            if (clearPanel != null) clearPanel.SetActive(false);
             if (heldPanel != null) heldPanel.SetActive(false);
         }
 
@@ -56,7 +60,6 @@ namespace BatteryGame
         {
             var gm = GameManager.Instance;
             gm.ProgressChanged += RefreshProgress;
-            gm.Cleared += ShowClear;
             RefreshProgress();
         }
 
@@ -139,13 +142,11 @@ namespace BatteryGame
             toastGroup.alpha = Mathf.Clamp01(toastTimer / 0.5f);
         }
 
-        void ShowClear()
+        /// <summary>메뉴가 떠 있는 동안 게임플레이 HUD를 통째로 숨긴다.</summary>
+        public void SetVisible(bool on)
         {
-            if (clearPanel != null) clearPanel.SetActive(true);
-            var gm = GameManager.Instance;
-            if (clearText != null)
-                clearText.text = "정리 완료!\n\n건전지 " + gm.TotalBatteries + "개 처리\n기기 " +
-                                 gm.SubmittedDevices + "개 제출\n\nEsc: 커서 해제";
+            if (canvas == null) canvas = GetComponent<Canvas>();
+            if (canvas != null) canvas.enabled = on;
         }
 
         public static void Toast(string message, ToastKind kind = ToastKind.Info)
@@ -171,7 +172,7 @@ namespace BatteryGame
 
         public void Bind(PlayerInteractor interactor, Text hTitle, Text hDetail, Graphic cross,
                          GameObject held, Text heldT, Text heldD, RectTransform barFill, Graphic barGraphic,
-                         Text progress, Text toast, CanvasGroup toastCg, GameObject clear, Text clearTxt)
+                         Text progress, Text toast, CanvasGroup toastCg)
         {
             player = interactor;
             hoverTitle = hTitle;
@@ -185,8 +186,6 @@ namespace BatteryGame
             progressText = progress;
             toastText = toast;
             toastGroup = toastCg;
-            clearPanel = clear;
-            clearText = clearTxt;
         }
     }
 }

@@ -77,6 +77,12 @@ namespace BatteryGame
         {
             if (player.Held == null)
             {
+                // 제출한 기기를 다시 집으면 중복 제출이 되어 집계가 망가진다.
+                if (IsSubmitted)
+                {
+                    HUD.Toast("이미 제출한 기기입니다.", ToastKind.Warning);
+                    return;
+                }
                 player.PickUp(this);
                 return;
             }
@@ -216,6 +222,9 @@ namespace BatteryGame
         public void MarkSubmitted()
         {
             IsSubmitted = true;
+            // 제출대에 기기가 쌓이면 표시등 광원이 겹쳐서 주변이 온통 초록으로 물든다.
+            // 발광 머티리얼은 그대로 두고 실시간 광원만 끈다.
+            if (indicatorLight != null) indicatorLight.enabled = false;
             UpdateWorldLabel();
         }
     }

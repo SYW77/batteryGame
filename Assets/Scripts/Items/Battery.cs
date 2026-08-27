@@ -47,6 +47,18 @@ namespace BatteryGame
         /// <summary>현재 꽂혀 있는 기기. 없으면 null.</summary>
         public Device InstalledIn { get; set; }
 
+        /// <summary>
+        /// 수거함에 버려져 파괴가 예약된 상태.
+        /// Destroy는 프레임 끝에 처리되어 그 사이 FindObjectsByType에 잡히므로,
+        /// 같은 프레임에 저장이 일어나면 버린 건전지가 세이브에 되살아난다. 그것을 막는 표식.
+        /// </summary>
+        public bool IsDiscarded { get; private set; }
+
+        public void MarkDiscarded()
+        {
+            IsDiscarded = true;
+        }
+
         public override Vector3 HoldOffset { get { return new Vector3(0.16f, -0.13f, 0.42f); } }
         public override Quaternion HoldRotation { get { return Quaternion.Euler(70f, 0f, 12f); } }
 

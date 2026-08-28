@@ -22,7 +22,7 @@ namespace BatteryGame
             Font font = ResolveFont();
             if (font == null) return;
 
-            var texts = FindObjectsByType<Text>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            var texts = FindObjectsByType<Text>(FindObjectsInactive.Include);
             for (int i = 0; i < texts.Length; i++)
             {
                 texts[i].font = font;

@@ -13,17 +13,27 @@ namespace BatteryGame
         public float charge;
         public bool inspected;
 
-        /// <summary>꽂혀 있는 기기의 인덱스. -1이면 더미/바닥에 놓인 상태.</summary>
-        public int deviceIndex = -1;
+        /// <summary>꽂혀 있는 기기의 고유 키. 비어 있으면 더미/바닥에 놓인 상태.</summary>
+        public string deviceKey = "";
 
         public Vector3 position;
         public Vector3 euler;
     }
 
+    /// <summary>기기 한 대의 저장 상태.</summary>
+    [Serializable]
+    public class DeviceSave
+    {
+        public string key;
+        public bool submitted;
+    }
+
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 1;
+        // v1은 기기를 배열 인덱스로 식별해서, 기기 목록 순서가 바뀌면 세이브가 어긋났다.
+        // v2부터는 고유 키로 식별한다. 버전이 다르면 Load가 null을 돌려주고 이어하기가 사라진다.
+        public const int CurrentVersion = 2;
 
         public int version = CurrentVersion;
         public float elapsedSeconds;
@@ -32,7 +42,7 @@ namespace BatteryGame
         public int resolvedBatteries;
         public int submittedDevices;
 
-        public bool[] deviceSubmitted = new bool[0];
+        public List<DeviceSave> devices = new List<DeviceSave>();
         public List<BatterySave> batteries = new List<BatterySave>();
 
         public Vector3 playerPosition;

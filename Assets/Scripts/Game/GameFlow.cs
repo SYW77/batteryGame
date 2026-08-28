@@ -44,11 +44,11 @@ namespace BatteryGame
 
         void Awake()
         {
-            if (gameManager == null) gameManager = FindFirstObjectByType<GameManager>();
-            if (controller == null) controller = FindFirstObjectByType<FirstPersonController>();
-            if (interactor == null) interactor = FindFirstObjectByType<PlayerInteractor>();
-            if (hud == null) hud = FindFirstObjectByType<HUD>();
-            if (submitCounter == null) submitCounter = FindFirstObjectByType<SubmitCounter>();
+            if (gameManager == null) gameManager = FindAnyObjectByType<GameManager>();
+            if (controller == null) controller = FindAnyObjectByType<FirstPersonController>();
+            if (interactor == null) interactor = FindAnyObjectByType<PlayerInteractor>();
+            if (hud == null) hud = FindAnyObjectByType<HUD>();
+            if (submitCounter == null) submitCounter = FindAnyObjectByType<SubmitCounter>();
 
             if (newGameButton != null) newGameButton.onClick.AddListener(StartNewGame);
             if (continueButton != null) continueButton.onClick.AddListener(ContinueGame);

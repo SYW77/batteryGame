@@ -25,7 +25,7 @@ namespace BatteryGame
             {
                 if (instance == null)
                 {
-                    instance = FindFirstObjectByType<GameManager>();
+                    instance = FindAnyObjectByType<GameManager>();
                     if (instance == null)
                         instance = new GameObject("GameManager").AddComponent<GameManager>();
                 }
@@ -73,13 +73,14 @@ namespace BatteryGame
         }
 
         /// <summary>
-        /// 세이브에서 기기를 인덱스로 찾으므로 순서가 매번 같아야 한다.
-        /// FindObjectsByType은 순서를 보장하지 않아서 계층 순서로 정렬한다.
+        /// 세이브는 기기를 고유 키로 식별하므로 이 순서에 의존하지 않는다.
+        /// 그래도 계층 순서로 정렬해 두면 순회 결과가 매번 같아 디버깅이 편하다.
+        /// (FindObjectsByType이 돌려주는 순서는 원래 보장되지 않는다.)
         /// </summary>
         void CollectDevices()
         {
             devices.Clear();
-            devices.AddRange(FindObjectsByType<Device>(FindObjectsInactive.Include, FindObjectsSortMode.None));
+            devices.AddRange(FindObjectsByType<Device>(FindObjectsInactive.Include));
             devices.Sort(delegate (Device a, Device b)
             {
                 return a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex());
@@ -252,7 +253,7 @@ namespace BatteryGame
         void ClearPile()
         {
             StopAllCoroutines();
-            var all = FindObjectsByType<Battery>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            var all = FindObjectsByType<Battery>(FindObjectsInactive.Include);
             for (int i = 0; i < all.Length; i++)
             {
                 if (all[i] == null) continue;
@@ -272,12 +273,17 @@ namespace BatteryGame
             data.resolvedBatteries = ResolvedBatteries;
             data.submittedDevices = SubmittedDevices;
 
-            data.deviceSubmitted = new bool[devices.Count];
+            data.devices.Clear();
             for (int i = 0; i < devices.Count; i++)
-                data.deviceSubmitted[i] = devices[i].IsSubmitted;
+            {
+                var rec = new DeviceSave();
+                rec.key = devices[i].Key;
+                rec.submitted = devices[i].IsSubmitted;
+                data.devices.Add(rec);
+            }
 
             data.batteries.Clear();
-            var all = FindObjectsByType<Battery>(FindObjectsSortMode.None);
+            var all = FindObjectsByType<Battery>();
             for (int i = 0; i < all.Length; i++)
             {
                 var b = all[i];
@@ -286,11 +292,20 @@ namespace BatteryGame
                 rec.size = (int)b.Size;
                 rec.charge = b.Charge;
                 rec.inspected = b.Inspected;
-                rec.deviceIndex = b.InstalledIn != null ? devices.IndexOf(b.InstalledIn) : -1;
+                rec.deviceKey = b.InstalledIn != null ? b.InstalledIn.Key : "";
                 rec.position = b.transform.position;
                 rec.euler = b.transform.eulerAngles;
                 data.batteries.Add(rec);
             }
+        }
+
+        /// <summary>키로 기기를 찾는다. 세이브에 있는 키가 지금 씬에 없으면 null(무시).</summary>
+        Device DeviceByKey(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return null;
+            for (int i = 0; i < devices.Count; i++)
+                if (devices[i].Key == key) return devices[i];
+            return null;
         }
 
         /// <summary>세이브 데이터로 진행 상황을 복원한다. 기기는 씬의 제자리에 있다고 가정한다.</summary>
@@ -312,18 +327,21 @@ namespace BatteryGame
                 if (rec.inspected) battery.MarkInspected();
                 battery.name = "Battery_" + BatterySizes.Label(size) + "_" + i;
 
-                if (rec.deviceIndex >= 0 && rec.deviceIndex < devices.Count)
+                Device host = DeviceByKey(rec.deviceKey);
+                if (host != null)
                 {
                     string message;
-                    devices[rec.deviceIndex].TryInsert(battery, out message);
+                    host.TryInsert(battery, out message);
                 }
             }
 
-            for (int i = 0; i < devices.Count && i < data.deviceSubmitted.Length; i++)
+            for (int i = 0; i < data.devices.Count; i++)
             {
-                if (!data.deviceSubmitted[i]) continue;
-                if (counter != null) counter.RestoreSubmitted(devices[i]);
-                else devices[i].MarkSubmitted();
+                if (!data.devices[i].submitted) continue;
+                Device device = DeviceByKey(data.devices[i].key);
+                if (device == null) continue; // 세이브 이후 없어진 기기는 건너뛴다
+                if (counter != null) counter.RestoreSubmitted(device);
+                else device.MarkSubmitted();
             }
 
             TotalBatteries = data.totalBatteries;

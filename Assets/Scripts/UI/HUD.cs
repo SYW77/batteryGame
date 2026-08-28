@@ -50,7 +50,7 @@ namespace BatteryGame
         void Awake()
         {
             instance = this;
-            if (player == null) player = FindFirstObjectByType<PlayerInteractor>();
+            if (player == null) player = FindAnyObjectByType<PlayerInteractor>();
             canvas = GetComponent<Canvas>();
             if (toastGroup != null) toastGroup.alpha = 0f;
             if (heldPanel != null) heldPanel.SetActive(false);

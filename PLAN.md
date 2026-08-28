@@ -46,7 +46,9 @@
    - 더미를 더 늘릴 경우 상판 밖으로 퍼지는지 확인 (`PileArea` vs `BatteryTableX/Z`).
      141개 실측: x±0.53 / z±0.61 (한계 1.20 / 1.00)
 3. **버그 잡기** — 아래 "알려진 리스크" 확인
-4. **빌드** — Windows 64bit. `File ▸ Build Settings`에서 Workshop 씬만 체크되어 있으면 됨
+4. ~~**빌드**~~ ✅ Windows 64bit 빌드 성공 (에러 0, 196.8MB, `Builds/Windows/batteryGame.exe`).
+   실행해서 한글 표시와 UI 버튼 동작까지 확인 완료.
+5. ~~**Deprecated API 정리**~~ ✅ CS0618 12곳 제거, 세이브를 인덱스 → 고유 키 식별로 전환
 5. 여유가 있으면: 최고 기록(클리어 시간) 저장, 난이도 선택
 
 ## 알려진 리스크 / 미확인 항목

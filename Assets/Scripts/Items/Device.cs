@@ -8,6 +8,8 @@ namespace BatteryGame
     public class Device : Carryable
     {
         [Header("사양")]
+        [Tooltip("세이브가 기기를 식별하는 고유 키. 배열 순서나 표시 이름이 바뀌어도 이 값만 그대로면 세이브가 유지된다.")]
+        [SerializeField] string key = "";
         [SerializeField] string deviceName = "전자기기";
         [SerializeField] BatterySize requiredSize = BatterySize.AA;
         [SerializeField] int requiredCount = 2;
@@ -21,6 +23,9 @@ namespace BatteryGame
         [SerializeField] Text worldLabel;
 
         readonly List<Battery> installed = new List<Battery>();
+
+        /// <summary>세이브용 고유 키. 비어 있으면 이름으로 대체한다.</summary>
+        public string Key { get { return string.IsNullOrEmpty(key) ? deviceName : key; } }
 
         public string DeviceName { get { return deviceName; } }
         public BatterySize RequiredSize { get { return requiredSize; } }
@@ -56,8 +61,9 @@ namespace BatteryGame
             Evaluate();
         }
 
-        public void Configure(string newName, BatterySize size, int count)
+        public void Configure(string uniqueKey, string newName, BatterySize size, int count)
         {
+            key = uniqueKey;
             deviceName = newName;
             requiredSize = size;
             requiredCount = Mathf.Max(1, count);

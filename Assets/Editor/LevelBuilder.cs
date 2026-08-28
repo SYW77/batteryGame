@@ -67,56 +67,60 @@ namespace BatteryGame.EditorTools
 
         struct DeviceDef
         {
+            /// <summary>세이브가 기기를 식별하는 고유 키. 표시 이름이나 배열 순서와 무관해야 하므로
+            /// 한 번 정하면 바꾸지 말 것. 바꾸면 기존 세이브에서 그 기기가 사라진 것으로 취급된다.</summary>
+            public string Key;
+
             public string Name;
             public BatterySize Size;
             public int Count;
             public Vector3 Body;
             public Color Color;
 
-            public DeviceDef(string name, BatterySize size, int count, Vector3 body, Color color)
+            public DeviceDef(string key, string name, BatterySize size, int count, Vector3 body, Color color)
             {
-                Name = name; Size = size; Count = count; Body = body; Color = color;
+                Key = key; Name = name; Size = size; Count = count; Body = body; Color = color;
             }
         }
 
         static readonly DeviceDef[] Devices =
         {
-            new DeviceDef("TV 리모컨", BatterySize.AAA, 2, new Vector3(0.055f, 0.030f, 0.20f), new Color(0.16f, 0.17f, 0.20f)),
-            new DeviceDef("벽시계", BatterySize.AA, 1, new Vector3(0.24f, 0.055f, 0.24f), new Color(0.90f, 0.88f, 0.82f)),
-            new DeviceDef("무선 마우스", BatterySize.AA, 2, new Vector3(0.070f, 0.040f, 0.115f), new Color(0.30f, 0.33f, 0.38f)),
-            new DeviceDef("손전등", BatterySize.D, 2, new Vector3(0.075f, 0.075f, 0.27f), new Color(0.85f, 0.55f, 0.10f)),
-            new DeviceDef("탁상 라디오", BatterySize.C, 2, new Vector3(0.26f, 0.15f, 0.11f), new Color(0.45f, 0.28f, 0.18f)),
-            new DeviceDef("장난감 로봇", BatterySize.AA, 4, new Vector3(0.13f, 0.21f, 0.095f), new Color(0.75f, 0.20f, 0.22f)),
-            new DeviceDef("화재경보기", BatterySize.NineVolt, 1, new Vector3(0.17f, 0.055f, 0.17f), new Color(0.94f, 0.94f, 0.90f)),
-            new DeviceDef("게임 컨트롤러", BatterySize.AAA, 3, new Vector3(0.17f, 0.050f, 0.12f), new Color(0.22f, 0.26f, 0.45f)),
-            new DeviceDef("무선 키보드", BatterySize.AA, 2, new Vector3(0.34f, 0.030f, 0.13f), new Color(0.24f, 0.25f, 0.28f)),
-            new DeviceDef("탁상 시계", BatterySize.AAA, 2, new Vector3(0.15f, 0.11f, 0.07f), new Color(0.72f, 0.60f, 0.38f)),
-            new DeviceDef("휴대용 선풍기", BatterySize.AA, 2, new Vector3(0.13f, 0.16f, 0.08f), new Color(0.35f, 0.75f, 0.80f)),
-            new DeviceDef("체중계", BatterySize.AAA, 4, new Vector3(0.30f, 0.040f, 0.26f), new Color(0.86f, 0.87f, 0.89f)),
-            new DeviceDef("무전기", BatterySize.AA, 3, new Vector3(0.09f, 0.20f, 0.05f), new Color(0.18f, 0.30f, 0.18f)),
-            new DeviceDef("전동 칫솔", BatterySize.AA, 1, new Vector3(0.045f, 0.19f, 0.045f), new Color(0.92f, 0.92f, 0.95f)),
-            new DeviceDef("메트로놈", BatterySize.NineVolt, 1, new Vector3(0.13f, 0.19f, 0.11f), new Color(0.55f, 0.22f, 0.16f)),
-            new DeviceDef("캠핑 랜턴", BatterySize.D, 3, new Vector3(0.17f, 0.22f, 0.17f), new Color(0.20f, 0.55f, 0.35f)),
-            new DeviceDef("전자 저울", BatterySize.AAA, 2, new Vector3(0.22f, 0.045f, 0.17f), new Color(0.30f, 0.32f, 0.36f)),
-            new DeviceDef("리모컨 자동차", BatterySize.C, 4, new Vector3(0.26f, 0.10f, 0.13f), new Color(0.88f, 0.30f, 0.15f)),
-            new DeviceDef("전자 키보드", BatterySize.AA, 4, new Vector3(0.38f, 0.045f, 0.14f), new Color(0.18f, 0.19f, 0.23f)),
-            new DeviceDef("벽걸이 온도계", BatterySize.AAA, 1, new Vector3(0.11f, 0.16f, 0.035f), new Color(0.88f, 0.89f, 0.86f)),
-            new DeviceDef("무선 도어벨", BatterySize.C, 2, new Vector3(0.14f, 0.075f, 0.14f), new Color(0.75f, 0.72f, 0.64f)),
-            new DeviceDef("헤드램프", BatterySize.AAA, 3, new Vector3(0.13f, 0.06f, 0.075f), new Color(0.16f, 0.42f, 0.30f)),
-            new DeviceDef("LED 스탠드", BatterySize.D, 2, new Vector3(0.16f, 0.30f, 0.16f), new Color(0.92f, 0.90f, 0.84f)),
-            new DeviceDef("계산기", BatterySize.AAA, 2, new Vector3(0.11f, 0.025f, 0.17f), new Color(0.26f, 0.28f, 0.32f)),
-            new DeviceDef("전기요 조절기", BatterySize.AA, 2, new Vector3(0.09f, 0.05f, 0.14f), new Color(0.70f, 0.35f, 0.45f)),
-            new DeviceDef("미니 선풍기", BatterySize.AA, 1, new Vector3(0.10f, 0.13f, 0.07f), new Color(0.45f, 0.78f, 0.60f)),
-            new DeviceDef("라디오 시계", BatterySize.C, 3, new Vector3(0.24f, 0.11f, 0.13f), new Color(0.35f, 0.30f, 0.55f)),
-            new DeviceDef("휴대 무전기", BatterySize.AA, 3, new Vector3(0.085f, 0.19f, 0.05f), new Color(0.30f, 0.30f, 0.14f)),
-            new DeviceDef("연기 감지기", BatterySize.NineVolt, 1, new Vector3(0.15f, 0.05f, 0.15f), new Color(0.90f, 0.90f, 0.92f)),
-            new DeviceDef("전자 도어락", BatterySize.AA, 4, new Vector3(0.11f, 0.26f, 0.06f), new Color(0.32f, 0.34f, 0.38f)),
-            new DeviceDef("손 마사지기", BatterySize.AAA, 2, new Vector3(0.09f, 0.09f, 0.15f), new Color(0.80f, 0.55f, 0.72f)),
-            new DeviceDef("소형 랜턴", BatterySize.D, 1, new Vector3(0.11f, 0.17f, 0.11f), new Color(0.85f, 0.75f, 0.25f)),
-            new DeviceDef("전동 드라이버", BatterySize.C, 4, new Vector3(0.075f, 0.20f, 0.075f), new Color(0.85f, 0.45f, 0.10f)),
-            new DeviceDef("체온계", BatterySize.AAA, 1, new Vector3(0.03f, 0.02f, 0.13f), new Color(0.95f, 0.95f, 0.97f)),
-            new DeviceDef("비상 손전등", BatterySize.D, 3, new Vector3(0.09f, 0.09f, 0.30f), new Color(0.80f, 0.20f, 0.18f)),
-            new DeviceDef("기타 튜너", BatterySize.NineVolt, 1, new Vector3(0.10f, 0.035f, 0.07f), new Color(0.20f, 0.55f, 0.62f)),
+            new DeviceDef("tv_remote", "TV 리모컨", BatterySize.AAA, 2, new Vector3(0.055f, 0.030f, 0.20f), new Color(0.16f, 0.17f, 0.20f)),
+            new DeviceDef("wall_clock", "벽시계", BatterySize.AA, 1, new Vector3(0.24f, 0.055f, 0.24f), new Color(0.90f, 0.88f, 0.82f)),
+            new DeviceDef("wireless_mouse", "무선 마우스", BatterySize.AA, 2, new Vector3(0.070f, 0.040f, 0.115f), new Color(0.30f, 0.33f, 0.38f)),
+            new DeviceDef("flashlight", "손전등", BatterySize.D, 2, new Vector3(0.075f, 0.075f, 0.27f), new Color(0.85f, 0.55f, 0.10f)),
+            new DeviceDef("desk_radio", "탁상 라디오", BatterySize.C, 2, new Vector3(0.26f, 0.15f, 0.11f), new Color(0.45f, 0.28f, 0.18f)),
+            new DeviceDef("toy_robot", "장난감 로봇", BatterySize.AA, 4, new Vector3(0.13f, 0.21f, 0.095f), new Color(0.75f, 0.20f, 0.22f)),
+            new DeviceDef("fire_alarm", "화재경보기", BatterySize.NineVolt, 1, new Vector3(0.17f, 0.055f, 0.17f), new Color(0.94f, 0.94f, 0.90f)),
+            new DeviceDef("game_controller", "게임 컨트롤러", BatterySize.AAA, 3, new Vector3(0.17f, 0.050f, 0.12f), new Color(0.22f, 0.26f, 0.45f)),
+            new DeviceDef("wireless_keyboard", "무선 키보드", BatterySize.AA, 2, new Vector3(0.34f, 0.030f, 0.13f), new Color(0.24f, 0.25f, 0.28f)),
+            new DeviceDef("desk_clock", "탁상 시계", BatterySize.AAA, 2, new Vector3(0.15f, 0.11f, 0.07f), new Color(0.72f, 0.60f, 0.38f)),
+            new DeviceDef("handy_fan", "휴대용 선풍기", BatterySize.AA, 2, new Vector3(0.13f, 0.16f, 0.08f), new Color(0.35f, 0.75f, 0.80f)),
+            new DeviceDef("body_scale", "체중계", BatterySize.AAA, 4, new Vector3(0.30f, 0.040f, 0.26f), new Color(0.86f, 0.87f, 0.89f)),
+            new DeviceDef("walkie_talkie", "무전기", BatterySize.AA, 3, new Vector3(0.09f, 0.20f, 0.05f), new Color(0.18f, 0.30f, 0.18f)),
+            new DeviceDef("electric_toothbrush", "전동 칫솔", BatterySize.AA, 1, new Vector3(0.045f, 0.19f, 0.045f), new Color(0.92f, 0.92f, 0.95f)),
+            new DeviceDef("metronome", "메트로놈", BatterySize.NineVolt, 1, new Vector3(0.13f, 0.19f, 0.11f), new Color(0.55f, 0.22f, 0.16f)),
+            new DeviceDef("camping_lantern", "캠핑 랜턴", BatterySize.D, 3, new Vector3(0.17f, 0.22f, 0.17f), new Color(0.20f, 0.55f, 0.35f)),
+            new DeviceDef("kitchen_scale", "전자 저울", BatterySize.AAA, 2, new Vector3(0.22f, 0.045f, 0.17f), new Color(0.30f, 0.32f, 0.36f)),
+            new DeviceDef("rc_car", "리모컨 자동차", BatterySize.C, 4, new Vector3(0.26f, 0.10f, 0.13f), new Color(0.88f, 0.30f, 0.15f)),
+            new DeviceDef("piano_keyboard", "전자 키보드", BatterySize.AA, 4, new Vector3(0.38f, 0.045f, 0.14f), new Color(0.18f, 0.19f, 0.23f)),
+            new DeviceDef("wall_thermometer", "벽걸이 온도계", BatterySize.AAA, 1, new Vector3(0.11f, 0.16f, 0.035f), new Color(0.88f, 0.89f, 0.86f)),
+            new DeviceDef("wireless_doorbell", "무선 도어벨", BatterySize.C, 2, new Vector3(0.14f, 0.075f, 0.14f), new Color(0.75f, 0.72f, 0.64f)),
+            new DeviceDef("headlamp", "헤드램프", BatterySize.AAA, 3, new Vector3(0.13f, 0.06f, 0.075f), new Color(0.16f, 0.42f, 0.30f)),
+            new DeviceDef("led_stand", "LED 스탠드", BatterySize.D, 2, new Vector3(0.16f, 0.30f, 0.16f), new Color(0.92f, 0.90f, 0.84f)),
+            new DeviceDef("calculator", "계산기", BatterySize.AAA, 2, new Vector3(0.11f, 0.025f, 0.17f), new Color(0.26f, 0.28f, 0.32f)),
+            new DeviceDef("blanket_controller", "전기요 조절기", BatterySize.AA, 2, new Vector3(0.09f, 0.05f, 0.14f), new Color(0.70f, 0.35f, 0.45f)),
+            new DeviceDef("mini_fan", "미니 선풍기", BatterySize.AA, 1, new Vector3(0.10f, 0.13f, 0.07f), new Color(0.45f, 0.78f, 0.60f)),
+            new DeviceDef("radio_clock", "라디오 시계", BatterySize.C, 3, new Vector3(0.24f, 0.11f, 0.13f), new Color(0.35f, 0.30f, 0.55f)),
+            new DeviceDef("portable_radio", "휴대 무전기", BatterySize.AA, 3, new Vector3(0.085f, 0.19f, 0.05f), new Color(0.30f, 0.30f, 0.14f)),
+            new DeviceDef("smoke_detector", "연기 감지기", BatterySize.NineVolt, 1, new Vector3(0.15f, 0.05f, 0.15f), new Color(0.90f, 0.90f, 0.92f)),
+            new DeviceDef("door_lock", "전자 도어락", BatterySize.AA, 4, new Vector3(0.11f, 0.26f, 0.06f), new Color(0.32f, 0.34f, 0.38f)),
+            new DeviceDef("hand_massager", "손 마사지기", BatterySize.AAA, 2, new Vector3(0.09f, 0.09f, 0.15f), new Color(0.80f, 0.55f, 0.72f)),
+            new DeviceDef("small_lantern", "소형 랜턴", BatterySize.D, 1, new Vector3(0.11f, 0.17f, 0.11f), new Color(0.85f, 0.75f, 0.25f)),
+            new DeviceDef("power_driver", "전동 드라이버", BatterySize.C, 4, new Vector3(0.075f, 0.20f, 0.075f), new Color(0.85f, 0.45f, 0.10f)),
+            new DeviceDef("thermometer", "체온계", BatterySize.AAA, 1, new Vector3(0.03f, 0.02f, 0.13f), new Color(0.95f, 0.95f, 0.97f)),
+            new DeviceDef("emergency_light", "비상 손전등", BatterySize.D, 3, new Vector3(0.09f, 0.09f, 0.30f), new Color(0.80f, 0.20f, 0.18f)),
+            new DeviceDef("guitar_tuner", "기타 튜너", BatterySize.NineVolt, 1, new Vector3(0.10f, 0.035f, 0.07f), new Color(0.20f, 0.55f, 0.62f)),
         };
 
         [MenuItem("BatteryGame/Build Level")]
@@ -396,7 +400,7 @@ namespace BatteryGame.EditorTools
             rb.angularDamping = 2f;
 
             var device = root.AddComponent<Device>();
-            device.Configure(def.Name, def.Size, def.Count);
+            device.Configure(def.Key, def.Name, def.Size, def.Count);
             device.BindVisuals(anchors, indGo.GetComponent<Renderer>(), offMat, onMat, lamp, label);
         }
 

@@ -53,7 +53,7 @@ namespace BatteryGame
                 HUD.Toast("손에 든 것을 내려놓고 눌러주세요. (G)", ToastKind.Warning);
                 return;
             }
-            if (flow == null) flow = FindFirstObjectByType<GameFlow>();
+            if (flow == null) flow = FindAnyObjectByType<GameFlow>();
             if (flow != null) flow.ShowClearScreen();
         }
     }
